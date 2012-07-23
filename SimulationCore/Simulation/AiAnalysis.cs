@@ -88,9 +88,9 @@ namespace AntMe.Simulation {
             setup.ApplicationBase = ".\\";
 
             // setup accessrights for the appdomain
-            PermissionSet rechte = new PermissionSet(PermissionState.None);
-            rechte.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-            rechte.AddPermission(new ReflectionPermission(ReflectionPermissionFlag.MemberAccess));
+            PermissionSet rechte = new PermissionSet(PermissionState.Unrestricted);
+            ////rechte.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
+            ////rechte.AddPermission(new ReflectionPermission(ReflectionPermissionFlag.MemberAccess));
 
             // create appdomain and analyse-host
             AppDomain app = AppDomain.CreateDomain("AnalysisHost", AppDomain.CurrentDomain.Evidence, setup, rechte);

@@ -6,13 +6,24 @@ using System.IO;
 using AntMe.SharedComponents.States;
 using AntMe.SharedComponents.Tools;
 
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 
-using Font=Microsoft.DirectX.Direct3D.Font;
 using Resource=AntMe.Plugin.Mdx.Resource;
 
 namespace AntMe.Plugin.Mdx {
+    using SlimDX;
+    using SlimDX.Direct3D9;
+
+    using Blend = SlimDX.Direct3D9.Blend;
+    using Device = SlimDX.Direct3D9.Device;
+    using Line = SlimDX.Direct3D9.Line;
+    using Material = SlimDX.Direct3D9.Material;
+    using Mesh = SlimDX.Direct3D9.Mesh;
+    using PrimitiveType = SlimDX.Direct3D9.PrimitiveType;
+    using RenderState = SlimDX.Direct3D9.RenderState;
+    using TransformState = SlimDX.Direct3D9.TransformState;
+    using VertexFormat = SlimDX.Direct3D9.VertexFormat;
+    using Font = SlimDX.Direct3D9.Font;
+
     /// <summary>
     /// class, to manage and render all model-resources.
     /// </summary>
@@ -35,8 +46,8 @@ namespace AntMe.Plugin.Mdx {
         private readonly Line line;
         private readonly Dictionary<int, Material> markerMaterials;
 
-        private readonly Font fontNormal;
-        private readonly Font fontBold;
+        private readonly SlimDX.Direct3D9.Font fontNormal;
+        private readonly SlimDX.Direct3D9.Font fontBold;
         private readonly Material selectionMaterial;
         private readonly Material playgroundMaterial;
         private readonly Device renderDevice;
@@ -90,8 +101,8 @@ namespace AntMe.Plugin.Mdx {
             selectionMaterial.Emissive = Color.FromArgb(120, 0, 0);
             selectionMaterial.Specular = Color.Red;
 
-            fontNormal = new Font(renderDevice, new System.Drawing.Font(FONTFAMILY, FONTSIZE, FontStyle.Regular));
-            fontBold = new Font(renderDevice, new System.Drawing.Font(FONTFAMILY, FONTSIZE, FontStyle.Bold));
+            fontNormal = new SlimDX.Direct3D9.Font(renderDevice, new System.Drawing.Font(FONTFAMILY, FONTSIZE, FontStyle.Regular));
+            fontBold = new SlimDX.Direct3D9.Font(renderDevice, new System.Drawing.Font(FONTFAMILY, FONTSIZE, FontStyle.Bold));
             line = new Line(renderDevice);
 
             createResources();
@@ -113,17 +124,17 @@ namespace AntMe.Plugin.Mdx {
         /// Creates all needed resources.
         /// </summary>
         private void createResources() {
-            collisionBox = Mesh.Box(renderDevice, 30.0f, 30.0f, 30.0f);
-            playgroundMesh = Mesh.Box(renderDevice, 1.0f, 1.0f, 1.0f);
-            sugarCubeMesh = Mesh.Box(renderDevice, 2.0f, 1.5f, 2.0f);
-            markerMesh = Mesh.Sphere(renderDevice, 1.0f, 10, 10);
-            antMesh = Mesh.FromStream(new MemoryStream(Models.ant), MeshFlags.DoNotClip, renderDevice);
-            bugMesh = Mesh.FromStream(new MemoryStream(Models.bug), MeshFlags.DoNotClip, renderDevice);
+            collisionBox = Mesh.CreateBox(renderDevice, 30.0f, 30.0f, 30.0f);
+            playgroundMesh = Mesh.CreateBox(renderDevice, 1.0f, 1.0f, 1.0f);
+            sugarCubeMesh = Mesh.CreateBox(renderDevice, 2.0f, 1.5f, 2.0f);
+            markerMesh = Mesh.CreateSphere(renderDevice, 1.0f, 10, 10);
+            antMesh = Mesh.FromStream(renderDevice, new MemoryStream(Models.ant), MeshFlags.DoNotClip);
+            bugMesh = Mesh.FromStream(renderDevice, new MemoryStream(Models.bug), MeshFlags.DoNotClip);
             sugarMesh =
-                Mesh.FromStream(new MemoryStream(Models.sugar), MeshFlags.DoNotClip, renderDevice);
+                Mesh.FromStream(renderDevice, new MemoryStream(Models.sugar), MeshFlags.DoNotClip);
             antHillMesh =
-                Mesh.FromStream(new MemoryStream(Models.anthill), MeshFlags.DoNotClip, renderDevice);
-            fruitMesh = Mesh.FromStream(new MemoryStream(Models.apple), MeshFlags.DoNotClip, renderDevice);
+                Mesh.FromStream(renderDevice, new MemoryStream(Models.anthill), MeshFlags.DoNotClip);
+            fruitMesh = Mesh.FromStream(renderDevice, new MemoryStream(Models.apple), MeshFlags.DoNotClip);
         }
 
         /// <summary>
@@ -202,7 +213,7 @@ namespace AntMe.Plugin.Mdx {
         public void RenderPlayground() {
             Matrix matrix = Matrix.Scaling(playgroundWidth*2, 1.0f, playgroundHeight*2);
             matrix.M42 = -0.5f;
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             renderDevice.Material = playgroundMaterial;
             playgroundMesh.DrawSubset(0);
         }
@@ -216,18 +227,18 @@ namespace AntMe.Plugin.Mdx {
         /// <returns>distance from viewer to item, if <see cref="Pickray"/> hits</returns>
         public float RenderBug(BugState state, Pickray pickray, bool selected) {
             Matrix matrix = Matrix.Identity;
-            matrix.RotateY((float) (state.Direction*Math.PI)/180);
+            matrix = Matrix.RotationY((float) (state.Direction*Math.PI)/180);
             matrix.M41 = (state.PositionX) - playgroundWidth;
             matrix.M43 = (-state.PositionY) + playgroundHeight;
             renderDevice.Material = (selected ? selectionMaterial : bugMaterial);
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             bugMesh.DrawSubset(0);
 
             // Check for pickray-collision
             matrix.Invert();
-            pickray.Origin.TransformCoordinate(matrix);
-            pickray.Direction.TransformNormal(matrix);
-            if (collisionBox.Intersect(pickray.Origin, pickray.Direction)) {
+            pickray.Origin = Vector3.TransformCoordinate(pickray.Origin, matrix);
+            pickray.Direction = Vector3.TransformNormal(pickray.Direction, matrix);
+            if (collisionBox.Intersects( new Ray(pickray.Origin, pickray.Direction))) {
                 return
                     Vector3.Subtract
                         (
@@ -249,26 +260,26 @@ namespace AntMe.Plugin.Mdx {
         /// <returns>distance from viewer to item, if <see cref="Pickray"/> hits</returns>
         public float RenderAnt(int colony, AntState state, Pickray pickray, bool selected) {
             Matrix matrix = Matrix.Identity;
-            matrix.RotateY((float) (state.Direction*Math.PI)/180);
+            matrix = Matrix.RotationY((float) (state.Direction*Math.PI)/180);
             matrix.M41 = state.PositionX - playgroundWidth;
             matrix.M43 = -state.PositionY + playgroundHeight;
             renderDevice.Material = (selected ? selectionMaterial : antMaterial[colony]);
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             antMesh.DrawSubset(0);
 
             // Draw sugar-block, if ant has sugar loaded
             if (state.LoadType == LoadType.Sugar) {
                 matrix.M42 = 3.5f;
                 renderDevice.Material = sugarMaterial;
-                renderDevice.Transform.World = matrix;
+                renderDevice.SetTransform(TransformState.World, matrix);
                 sugarCubeMesh.DrawSubset(0);
             }
 
             if (selected && state.TargetPositionX != 0) {
-                renderDevice.Transform.World = Matrix.Identity;
+                renderDevice.SetTransform(TransformState.World,  Matrix.Identity);
                 renderDevice.Material = sugarMaterial;
 
-                CustomVertex.PositionColored[] verts = new CustomVertex.PositionColored[2];
+                Vector3[] verts = new Vector3[2];
                 verts[0].X = (float) state.PositionX - playgroundWidth;
                 verts[0].Z = (float) -state.PositionY + playgroundHeight;
                 verts[0].Y = 2;
@@ -277,16 +288,16 @@ namespace AntMe.Plugin.Mdx {
                 verts[1].Z = (float) -state.TargetPositionY + playgroundHeight;
                 verts[1].Y = 2;
 
-                renderDevice.VertexFormat = CustomVertex.PositionColored.Format;
-                renderDevice.DrawUserPrimitives(PrimitiveType.LineList, 1, verts);
+                renderDevice.VertexFormat = VertexFormat.PositionNormal; // CustomVertex.PositionColored.Format;
+                renderDevice.DrawUserPrimitives(PrimitiveType.LineList, 1,  verts);
             }
 
             // Check for pickray-collision
             matrix.M42 = 0.0f;
             matrix.Invert();
-            pickray.Origin.TransformCoordinate(matrix);
-            pickray.Direction.TransformNormal(matrix);
-            if (collisionBox.Intersect(pickray.Origin, pickray.Direction)) {
+            pickray.Origin = Vector3.TransformCoordinate(pickray.Origin, matrix);
+            pickray.Direction = Vector3.TransformNormal(pickray.Direction, matrix);
+            if (collisionBox.Intersects( new Ray(pickray.Origin, pickray.Direction))) {
                 return
                     Vector3.Subtract
                         (
@@ -310,15 +321,15 @@ namespace AntMe.Plugin.Mdx {
                 Matrix.Translation(state.PositionX - playgroundWidth, 0, -state.PositionY + playgroundHeight);
             matrix.M11 = matrix.M22 = matrix.M33 = state.Radius/50.0f;
             renderDevice.Material = (selected ? selectionMaterial : sugarMaterial);
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             sugarMesh.DrawSubset(0);
 
             // Check for pickray-collision
             matrix.M42 = 0.0f;
             matrix.Invert();
-            pickray.Origin.TransformCoordinate(matrix);
-            pickray.Direction.TransformNormal(matrix);
-            if (collisionBox.Intersect(pickray.Origin, pickray.Direction)) {
+            pickray.Origin = Vector3.TransformCoordinate(pickray.Origin, matrix);
+            pickray.Direction = Vector3.TransformNormal(pickray.Direction, matrix);
+            if (collisionBox.Intersects(new Ray(pickray.Origin, pickray.Direction))) {
                 return
                     Vector3.Subtract
                         (
@@ -343,15 +354,15 @@ namespace AntMe.Plugin.Mdx {
             matrix.M22 = state.Radius/4.5f;
             matrix.M33 = state.Radius/4.5f;
             renderDevice.Material = (selected ? selectionMaterial : fruitMaterial);
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             fruitMesh.DrawSubset(0);
 
             // Check for pickray-collision
             matrix.M42 = 0.0f;
             matrix.Invert();
-            pickray.Origin.TransformCoordinate(matrix);
-            pickray.Direction.TransformNormal(matrix);
-            if (collisionBox.Intersect(pickray.Origin, pickray.Direction)) {
+            pickray.Origin = Vector3.TransformCoordinate(pickray.Origin, matrix);
+            pickray.Direction = Vector3.TransformNormal(pickray.Direction, matrix);
+            if (collisionBox.Intersects(new Ray(pickray.Origin, pickray.Direction))) {
                 return
                     Vector3.Subtract
                         (
@@ -373,15 +384,15 @@ namespace AntMe.Plugin.Mdx {
             Matrix matrix =
                 Matrix.Translation(state.PositionX - playgroundWidth, 0, -state.PositionY + playgroundHeight);
             renderDevice.Material = (selected ? selectionMaterial : antMaterial[colony]);
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             antHillMesh.DrawSubset(0);
 
             // Check for pickray-collision
             matrix.M42 = 0.0f;
             matrix.Invert();
-            pickray.Origin.TransformCoordinate(matrix);
-            pickray.Direction.TransformNormal(matrix);
-            if (collisionBox.Intersect(pickray.Origin, pickray.Direction)) {
+            pickray.Origin = Vector3.TransformCoordinate(pickray.Origin, matrix);
+            pickray.Direction = Vector3.TransformNormal(pickray.Direction, matrix);
+            if (collisionBox.Intersects(new Ray(pickray.Origin, pickray.Direction))) {
                 return
                     Vector3.Subtract
                         (
@@ -405,18 +416,18 @@ namespace AntMe.Plugin.Mdx {
             matrix.M33 = state.Radius;
 
             // Enable transperency
-            renderDevice.RenderState.AlphaBlendEnable = true;
-            renderDevice.RenderState.ZBufferWriteEnable = false;
-            renderDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            renderDevice.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            renderDevice.SetRenderState(RenderState.AlphaBlendEnable, true);
+            renderDevice.SetRenderState(RenderState.ZWriteEnable, false);
+            renderDevice.SetRenderState(RenderState.SourceBlend, Blend.SourceAlpha);
+            renderDevice.SetRenderState(RenderState.DestinationBlend, Blend.InverseSourceAlpha);
 
             renderDevice.Material = markerMaterials[colony];
-            renderDevice.Transform.World = matrix;
+            renderDevice.SetTransform(TransformState.World, matrix);
             markerMesh.DrawSubset(0);
 
             // Disable transparency
-            renderDevice.RenderState.AlphaBlendEnable = false;
-            renderDevice.RenderState.ZBufferWriteEnable = true;
+            renderDevice.SetRenderState(RenderState.AlphaBlendEnable, false);
+            renderDevice.SetRenderState(RenderState.ZWriteEnable, true);
         }
 
         /// <summary>
@@ -435,22 +446,23 @@ namespace AntMe.Plugin.Mdx {
             line.Begin();
             line.Draw
                 (
-                new Vector2[] {new Vector2(10, position), new Vector2(500, position)},
-                Color.FromArgb(100, Color.White).ToArgb());
+                new Vector2[] {new Vector2(10, position), new Vector2(500, position)}, new Color4(
+                Color.FromArgb(100, Color.White).ToArgb()));
             line.End();
 
-            fontNormal.DrawText(null, Resource.InfoboxColumnColony2, 20, ROWHEIGHT + 20, Color.Black);
 
-            fontNormal.DrawText(null, Resource.InfoboxColumnCollectedFood1, 200, 20, Color.Green);
-            fontNormal.DrawText(null, Resource.InfoboxColumnCollectedFood2, 200, ROWHEIGHT + 20, Color.Green);
+            fontNormal.DrawString(null, Resource.InfoboxColumnColony2, 20, ROWHEIGHT + 20, Color.Black);
 
-            fontNormal.DrawText(null, Resource.InfoboxColumnKilledAnts1, 290, 20, Color.Red);
-            fontNormal.DrawText(null, Resource.InfoboxColumnKilledAnts2, 290, ROWHEIGHT + 20, Color.Red);
+            fontNormal.DrawString(null, Resource.InfoboxColumnCollectedFood1, 200, 20, Color.Green);
+            fontNormal.DrawString(null, Resource.InfoboxColumnCollectedFood2, 200, ROWHEIGHT + 20, Color.Green);
 
-            fontNormal.DrawText(null, Resource.InfoboxColumnKilledBugs1, 370, 20, Color.Blue);
-            fontNormal.DrawText(null, Resource.InfoboxColumnKilledBugs2, 370, ROWHEIGHT + 20, Color.Blue);
+            fontNormal.DrawString(null, Resource.InfoboxColumnKilledAnts1, 290, 20, Color.Red);
+            fontNormal.DrawString(null, Resource.InfoboxColumnKilledAnts2, 290, ROWHEIGHT + 20, Color.Red);
 
-            fontNormal.DrawText(null, Resource.InfoboxColumnPoints2, 440, ROWHEIGHT + 20, Color.Black);
+            fontNormal.DrawString(null, Resource.InfoboxColumnKilledBugs1, 370, 20, Color.Blue);
+            fontNormal.DrawString(null, Resource.InfoboxColumnKilledBugs2, 370, ROWHEIGHT + 20, Color.Blue);
+
+            fontNormal.DrawString(null, Resource.InfoboxColumnPoints2, 440, ROWHEIGHT + 20, Color.Black);
 
             int count = 0;
 
@@ -459,15 +471,15 @@ namespace AntMe.Plugin.Mdx {
                     ColonyState colony = state.TeamStates[i].ColonyStates[j];
                     int killedAnts = colony.StarvedAnts + colony.EatenAnts + colony.BeatenAnts;
 
-                    fontBold.DrawText
+                    fontBold.DrawString
                         (null, colony.ColonyName, 20, count*ROWHEIGHT + 55, antMaterial[count].Emissive);
-                    fontNormal.DrawText
+                    fontNormal.DrawString
                         (null, colony.CollectedFood.ToString(), 200, count*ROWHEIGHT + 55, Color.Green);
-                    fontNormal.DrawText
+                    fontNormal.DrawString
                         (null, killedAnts.ToString(), 290, count*ROWHEIGHT + 55, Color.Red);
-                    fontNormal.DrawText
+                    fontNormal.DrawString
                         (null, colony.KilledBugs.ToString(), 370, count*ROWHEIGHT + 55, Color.Blue);
-                    fontBold.DrawText
+                    fontBold.DrawString
                         (null, colony.Points.ToString(), 440, count*ROWHEIGHT + 55, Color.Black);
                     count++;
                 }
@@ -489,11 +501,11 @@ namespace AntMe.Plugin.Mdx {
             line.Draw
                 (
                 new Vector2[] {new Vector2(position.X, positionY), new Vector2(position.X + 200, positionY)},
-                Color.FromArgb(100, Color.White).ToArgb());
+                new Color4(Color.FromArgb(100, Color.White).ToArgb()));
             line.End();
 
-            fontNormal.DrawText(null, line1, position.X + 10, position.Y + 10, Color.Black);
-            fontNormal.DrawText(null, line2, position.X + 10, position.Y + ROWHEIGHT + 10, Color.Black);
+            fontNormal.DrawString(null, line1, position.X + 10, position.Y + 10, Color.Black);
+            fontNormal.DrawString(null, line2, position.X + 10, position.Y + ROWHEIGHT + 10, Color.Black);
         }
 
         #endregion

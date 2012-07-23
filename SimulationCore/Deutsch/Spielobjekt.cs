@@ -17,7 +17,12 @@ namespace AntMe.Deutsch {
         /// <summary>
         /// Gibt das Basiselement zurück
         /// </summary>
-        internal ICoordinate Element {
+#if COORDINATEACCESS
+        public 
+#else
+        internal 
+#endif
+        ICoordinate Element {
             get { return element; }
         }
 

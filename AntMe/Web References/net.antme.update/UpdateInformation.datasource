@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="UpdateInformation" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>AntMe.Gui.net.antme.update.UpdateInformation</TypeInfo>
+   <TypeInfo>AntMe.Gui.net.antme.update.UpdateInformation, Web References.net.antme.update.Reference.cs, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

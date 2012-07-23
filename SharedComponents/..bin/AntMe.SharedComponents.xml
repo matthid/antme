@@ -1,0 +1,1690 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AntMe.SharedComponents</name>
+    </assembly>
+    <members>
+        <member name="T:AntMe.SharedComponents.States.CustomState">
+            <summary>
+            Holds custom <c>Plugin</c>-Information
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.CustomState.Add(System.String,System.Object)">
+            <summary>
+            Adds the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.CustomState.Remove(System.String)">
+            <summary>
+            Removes the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.CustomState.Remove(System.Object)">
+            <summary>
+            Removes the specified value.
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CustomState.HasValue">
+            <summary>
+            Gets a value indicating whether this instance has value.
+            </summary>
+            <value><c>true</c> if this instance has value; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CustomState.Item(System.String)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object"/> with the specified key.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CustomState.Keys">
+            <summary>
+            Gets a list of available keys.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.IConsumerPlugin">
+            <summary>
+            Interface for all consuming plugins.
+            </summary>
+            <author>Tom Wendel (tom@antme.net)</author>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.IPlugin">
+            <summary>
+            Base-Interface for all AntMe-Plugins.
+            </summary>
+            <author>Tom Wendel (tom@antme.net)</author>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IPlugin.Start">
+            <summary>
+            Starts the plugin-activity or resumes activity, if paused. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IPlugin.Stop">
+            <summary>
+            Stops the plugin-activity. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IPlugin.Pause">
+            <summary>
+            Pauses the activity or starts and pauses, if stopped. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IPlugin.StartupParameter(System.String[])">
+            <summary>
+            Delivers the start-parameter from main application to this plugin. Only called by UI-Thread.
+            </summary>
+            <param name="parameter">start-parameter</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IPlugin.SetVisibility(System.Boolean)">
+            <summary>
+            Sets the state of visibility of plugins user-control. Only called by UI-Thread.
+            </summary>
+            <param name="visible">is user-control visible in main window</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IPlugin.UpdateUI(AntMe.SharedComponents.States.SimulationState)">
+            <summary>
+            Updates UI. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.Description">
+            <summary>
+            Plugin-Description. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.Guid">
+            <summary>
+            Plugin-Guid. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.Name">
+            <summary>
+            Plugin-Name. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.Version">
+            <summary>
+            Plugin-Version. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.State">
+            <summary>
+            Gets the current plugin-state.  Called by UI- and GameLoop-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.Control">
+            <summary>
+            Gets the plugin-user-control so show in main application or null, if there is no user-control. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IPlugin.Settings">
+            <summary>
+            Gets or sets the settings for this plugin. usually a serialized configuration-class. Only called by UI-Thread.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IConsumerPlugin.CreateState(AntMe.SharedComponents.States.SimulationState@)">
+            <summary>
+            Sends the empty state to push some custom fields to control the simulation. Only called by GameLoop-Thread.
+            </summary>
+            <param name="state">empty state</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IConsumerPlugin.CreatingState(AntMe.SharedComponents.States.SimulationState@)">
+            <summary>
+            Sends the filled state to push some custom fields to control the other consumers. Only called by GameLoop-Thread.
+            </summary>
+            <param name="state">filled state</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IConsumerPlugin.CreatedState(AntMe.SharedComponents.States.SimulationState@)">
+            <summary>
+            Sends the complete filled state to consume. Only called by GameLoop-Thread.
+            </summary>
+            <param name="state">complete state</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.Plugin.IConsumerPlugin.Interrupt">
+            <summary>
+            Allows a plugin to signal an interrupt. Only called by GameLoop-Thread.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.Block.SugarFields">
+            <summary>
+            Possible Fields of sugarupdate
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.Block.UpdateBase">
+            <summary>
+            Basisklasse für alle Updateblocks für ein einheitliches Speichern der veränderten Felder
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.ISerializable">
+            <summary>
+            Interface for all serializable blocks.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.ISerializable.Serialize(AntMe.SharedComponents.AntVideo.Serializer)">
+            <summary>
+            Serializes the object into the given stream.
+            </summary>
+            <param name="serializer">output-stream</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.ISerializable.Deserialize(AntMe.SharedComponents.AntVideo.Serializer)">
+            <summary>
+            De-serializes the object out of given stream.
+            </summary>
+            <param name="serializer">input-stream</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Block.UpdateBase.Change(System.Int32)">
+            <summary>
+            Sets the given field to changed-state
+            </summary>
+            <param name="field">Changed field</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Block.UpdateBase.HasChanged(System.Int32)">
+            <summary>
+            Indicates changes in given field.
+            </summary>
+            <param name="field">field to check</param>
+            <returns>Changes in field</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Block.UpdateBase.Serialize(AntMe.SharedComponents.AntVideo.Serializer)">
+            <summary>
+            Serializes the updateinformation into the given stream.
+            </summary>
+            <param name="serializer">outputstream</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Block.UpdateBase.Deserialize(AntMe.SharedComponents.AntVideo.Serializer)">
+            <summary>
+            Deserializes the updateinformation out of given stream.
+            </summary>
+            <param name="serializer">inputstream</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.AntVideo.Block.UpdateBase.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.AntVideo.Block.SugarUpdate.AbsoluteAmount">
+            <summary>
+            Gets or sets the absolute value of amount.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.AntVideo.Block.SugarUpdate.AbsoluteRadius">
+            <summary>
+            Gets or sets the absolute value for radius.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.TeamState">
+            <summary>
+            Holds the information of a team of multiple colonies.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.IndexBasedState">
+            <summary>
+            Base-class for all index-based states
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.IndexBasedState.m_id">
+            <summary>
+            ID of this state.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.IndexBasedState.#ctor(System.Int32)">
+            <summary>
+            Constructor of this state.
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.IndexBasedState.CompareTo(AntMe.SharedComponents.States.IndexBasedState)">
+            <summary>
+            Compares two IndexBasedStates
+            </summary>
+            <param name="other">other state</param>
+            <returns>compare-result</returns>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.IndexBasedState.Id">
+            <summary>
+            Gets the id of this state.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TeamState.m_guid">
+            <summary>
+            <c>Guid</c> of team.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TeamState.m_name">
+            <summary>
+            Team-name.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.TeamState.#ctor(System.Int32)">
+            <summary>
+            Constructor of team-state
+            </summary>
+            <param name="id">id</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.TeamState.#ctor(System.Int32,System.Guid,System.String)">
+            <summary>
+            Constructor of team-state
+            </summary>
+            <param name="id">id of this team</param>
+            <param name="guid"><c>guid</c></param>
+            <param name="name">Name of this team</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.TeamState.ColonyStates">
+            <summary>
+            gets a list of castes.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.TeamState.Guid">
+            <summary>
+            Gets or sets the <c>guid</c> of the team.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.TeamState.Name">
+            <summary>
+            Gets or sets the name of the team.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.BugState">
+            <summary>
+            Holds information about bugs.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.BugState.m_direction">
+            <summary>
+            Direction.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.BugState.m_positionX">
+            <summary>
+            x-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.BugState.m_positionY">
+            <summary>
+            y-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.BugState.m_vitality">
+            <summary>
+            Vitality.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.BugState.#ctor(System.Int32)">
+            <summary>
+            Constructor of bugstate.
+            </summary>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.BugState.PositionX">
+            <summary>
+            Gets or sets the x-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.BugState.PositionY">
+            <summary>
+            Gets or sets the y-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.BugState.Direction">
+            <summary>
+            Gets or sets the direction.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.BugState.Vitality">
+            <summary>
+            Gets or sets the vitality.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Tools.Farbe">
+            <summary>
+            Stellt eine Farbe im RGB-Farbraum dar.
+            </summary>
+            <remarks>
+            Diese Struktur wurde definiert um von den in Windows Forms und Managed
+            DirectX definierten Farben unabhängig zu sein. Zusätzlich können Farben
+            durch die Verwendung dieser Struktur gemischt werden.
+            </remarks>
+            <author>Wolfgang Gallo (wolfgang@antme.net)</author>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.Farbe.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Der Farbe Konstruktor.
+            </summary>
+            <param name="rot">Rot-Wert</param>
+            <param name="grün">Grün-Wert</param>
+            <param name="blau">Blau-Wert</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.Farbe.ToString">
+            <summary>
+            Gibt die Farbe als Zeichenkette zurück.
+            </summary>
+            <returns>(Rot,Grün,Blau)</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.Farbe.op_Addition(AntMe.SharedComponents.Tools.Farbe,AntMe.SharedComponents.Tools.Farbe)">
+            <summary>
+            Addiert die RGB-Werte zweier Farben.
+            </summary><remarks>
+            Um zwei Farben zu mischen muß zusätzlich eine Division durchgeführt
+            werden: (farbe1 + farbe2) / 2.
+            </remarks>
+            <param name="f1">Farbe 1</param>
+            <param name="f2">Farbe 2</param>
+            <returns>Farbe</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.Farbe.op_Multiply(AntMe.SharedComponents.Tools.Farbe,System.Int32)">
+            <summary>
+            Multipliziert die RGB-Werte einer Farbe mit einer Zahl.
+            </summary>
+            <param name="f">Farbe</param>
+            <param name="i">Zahl</param>
+            <returns>Farbe</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.Farbe.op_Division(AntMe.SharedComponents.Tools.Farbe,System.Int32)">
+            <summary>
+            Dividiert die RGB-Werte einer Farbe durch eine Zahl.
+            </summary>
+            <param name="f">Farbe</param>
+            <param name="i">Zahl</param>
+            <returns>Farbe</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.Farbe.op_Subtraction(AntMe.SharedComponents.Tools.Farbe,AntMe.SharedComponents.Tools.Farbe)">
+            <summary>
+            Bestimmt ein Abstand-Maß zwischen zwei Farben im RGB-Farbraum.
+            </summary><remarks>
+            Wird von der Farbberater-Klasse verwendet.
+            </remarks>
+            <param name="f1">Farbe 1</param>
+            <param name="f2">Farbe 2</param>
+            <returns>Abstand²</returns>
+        </member>
+        <member name="P:AntMe.SharedComponents.Tools.Farbe.Rot">
+            <summary>
+            Der Rot-Wert der Farbe.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Tools.Farbe.Grün">
+            <summary>
+            Der Grün-Wert der Farbe.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Tools.Farbe.Blau">
+            <summary>
+            Der Blau-Wert der Farbe.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Tools.ColorFinder">
+            <summary>
+            Liefert Farben die sie möglichst stark voneinander Unterscheiden.
+            </summary>
+            <author>Wolfgang Gallo (wolfgang@antme.net)</author>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.ColorFinder.BelegeFarbe(AntMe.SharedComponents.Tools.Farbe)">
+            <summary>
+            Markiert eine neue Farbe als bereits vorhanden.
+            </summary>
+            <param name="farbe">Neue Farbe.</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.ColorFinder.EntferneFarbe(AntMe.SharedComponents.Tools.Farbe)">
+            <summary>
+            Entfernt eine vorhandene Farbe.
+            </summary>
+            <param name="farbe">Vorhandene Farbe.</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.ColorFinder.ErzeugeFarbe">
+            <summary>
+            Erzeugt eine neue Farbe mit möglichst großem Abstand zu den bereits
+            vorhandenen Farben.
+            </summary>
+            <returns>Neue Farbe.</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.ColorFinder.ErzeugeFarbe(System.Int32)">
+            <summary>
+            Erzeugt eine neue Farbe mit möglichst großem Abstand zu den bereits
+            vorhandenen Farben und verändert sie leicht.
+            </summary>
+            <returns>Neue Farbe.</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.ColorFinder.ErzeugeUndBelegeFarbe">
+            <summary>
+            Erzeugt eine neue Farbe mit möglichst großem Abstand zu den bereits
+            vorhandenen Farben und markiert sie als belegt.
+            </summary>
+            <returns>Neue Farbe.</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.ColorFinder.ErzeugeUndBelegeFarbe(System.Int32)">
+            <summary>
+            Erzeugt eine neue Farbe mit möglichst großem Abstand zu den bereits
+            vorhandenen Farben, verändert sie leicht und markiert sie als belegt.
+            </summary>
+            <returns>Neue Farbe.</returns>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.CasteState">
+            <summary>
+            Holds information about ant-castes
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.ColonyBasedState">
+            <summary>
+            Base-class for all colony-based and index-based states.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyBasedState.m_colonyId">
+            <summary>
+            colony-id
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.ColonyBasedState.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor of this state.
+            </summary>
+            <param name="colonyId">colony-id</param>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyBasedState.ColonyId">
+            <summary>
+            Gets the colony-id of this state.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_attackModificator">
+            <summary>
+            Attack-modificator.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_loadModificator">
+            <summary>
+            Load-modificator.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_name">
+            <summary>
+            Name of caste.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_rangeModificator">
+            <summary>
+            Range-modificator.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_rotationSpeedModificator">
+            <summary>
+            Rotation-speed-modificator.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_speedModificator">
+            <summary>
+            Speed-modificator.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_viewRangeModificator">
+            <summary>
+            View-range-modificator.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.CasteState.m_vitalityModificator">
+            <summary>
+            Vitality-modificator.
+            </summary>
+        </member>
+        <!-- Ungültiger XML-Kommentar wurde für den Member "M:AntMe.SharedComponents.States.CasteState.#ctor(System.Int32,System.Int32)" ignoriert -->
+        <member name="P:AntMe.SharedComponents.States.CasteState.AttackModificator">
+            <summary>
+            Gets or sets the attack-modificator.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.LoadModificator">
+            <summary>
+            Gets or sets the load-modificator.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.Name">
+            <summary>
+            Gets or sets the name of this caste.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.RangeModificator">
+            <summary>
+            Gets or sets the range-modificator.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.RotationSpeedModificator">
+            <summary>
+            Gets or sets the rotation-speed-modificator.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.SpeedModificator">
+            <summary>
+            Gets or sets the speed-modificator.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.ViewRangeModificator">
+            <summary>
+            Gets or sets the view-range-modificator.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.CasteState.VitalityModificator">
+            <summary>
+            Gets or sets the vitality-modificator.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.PluginState">
+            <summary>
+            List of possible plugin-states.
+            </summary>
+            <author>Tom Wendel (tom@antme.net)</author>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.PluginState.NotReady">
+            <summary>
+            Indicates a not startable state.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.PluginState.Ready">
+            <summary>
+            Shows the ability to start. Also pause is a possible command.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.PluginState.Running">
+            <summary>
+            Indicates a running plugin. Plugin can pause and stop.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.PluginState.Paused">
+            <summary>
+            Plugin is suspended. It can resume again via start or stop complete.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.FruitState">
+            <summary>
+            Holds information about fruit.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.FruitState.m_amount">
+            <summary>
+            Amount of food.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.FruitState.m_carryingAnts">
+            <summary>
+            Count of carrying ants.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.FruitState.m_positionX">
+            <summary>
+            x-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.FruitState.m_positionY">
+            <summary>
+            y-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.FruitState.m_radius">
+            <summary>
+            Radius.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.FruitState.#ctor(System.Int32)">
+            <summary>
+            Constructor of fruit-state.
+            </summary>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.FruitState.Amount">
+            <summary>
+            Gets or sets the amount of fruit.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.FruitState.PositionX">
+            <summary>
+            Gets or sets the x-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.FruitState.PositionY">
+            <summary>
+            Gets or sets the y-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.FruitState.Radius">
+            <summary>
+            Gets or sets the radius.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.FruitState.CarryingAnts">
+            <summary>
+            Gets or sets the number of carrying ants.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.IUpdateable`2">
+            <summary>
+            Interface for all updateable item-states
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.IUpdateable`2.Interpolate">
+            <summary>
+            Calculates the next state based on the last update-information
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.IUpdateable`2.Update(`0)">
+            <summary>
+            Delivers a new update-information
+            </summary>
+            <param name="update">new Update</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.IUpdateable`2.GenerateUpdate(`1)">
+            <summary>
+            Generates a new update-information based on given state
+            </summary>
+            <returns>update-information</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.IUpdateable`2.GenerateState">
+            <summary>
+            Generates a state of current states
+            </summary>
+            <returns>state</returns>
+        </member>
+        <member name="P:AntMe.SharedComponents.AntVideo.IUpdateable`2.IsAlive">
+            <summary>
+            Flag to mark activity
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.LoadType">
+            <summary>
+            List of possible loads.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.LoadType.None">
+            <summary>
+            No load
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.LoadType.Sugar">
+            <summary>
+            Sugar
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.LoadType.Fruit">
+            <summary>
+            Fruit
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.WriteCustomStateAttribute">
+            <summary>
+            Attribute, to signal, that the marked plugin writes the custom field.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.WriteCustomStateAttribute.Name">
+            <summary>
+            The name of the custom field.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.WriteCustomStateAttribute.Type">
+            <summary>
+            The full name of the used type.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.WriteCustomStateAttribute.Description">
+            <summary>
+            Optional description of usage.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.BlockType">
+            <summary>
+            List of possible block-types in stream.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Properties.Resources">
+            <summary>
+              Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Properties.Resources.ResourceManager">
+            <summary>
+              Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Properties.Resources.Culture">
+            <summary>
+              Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+              Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Properties.Resources.FemaleNames">
+             <summary>
+               Sucht eine lokalisierte Zeichenfolge, die Abby
+            Abelina
+            Abigail
+            Adelaide
+            Adeline
+            Adina
+            Adriana
+            Adrienne
+            Afra
+            Agatha
+            Agnes
+            Aida
+            Aimee
+            Aischa
+            Ajlin
+            Albertine
+            Alea
+            Aleksandra
+            Alena
+            Alessa
+            Alessandra
+            Alessia
+            Alexa
+            Alexandra
+            Alexia
+            Alexis
+            Alice
+            Alicia
+            Alida
+            Alina
+            Aline
+            Alisa
+            Alissa
+            Alisson
+            Amabella
+            Amadea
+            Amanda
+            Amelia
+            Amelie
+            Amina
+            Amy
+            Ana
+            Anastasia
+            Andrea
+            Andrina
+            Anette
+            Angela
+            Angelika
+            Angelina
+            Angelique
+            Anina
+            Anine
+            Anita
+            Anja
+            Anjalie
+            Anke
+            Ann
+            Anna
+            Annabel
+            Annabell
+            Annabella
+            Annabelle
+            Anne
+            A [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+             </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Properties.Resources.MaleNames">
+             <summary>
+               Sucht eine lokalisierte Zeichenfolge, die Christoph
+            Dominik
+            Hardy
+            Immo
+            Patric
+            Sebastian
+            Stefan
+            Tom
+            Uwe
+            Wolfgang ähnelt.
+             </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.Block.AntFields">
+            <summary>
+            Liste der Felder, die sich durch ein Update ändern könnten
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.MarkerState">
+            <summary>
+            Holds information about a marker.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.MarkerState.m_direction">
+            <summary>
+            Direction.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.MarkerState.m_positionX">
+            <summary>
+            x-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.MarkerState.m_positionY">
+            <summary>
+            y-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.MarkerState.m_radius">
+            <summary>
+            Radius.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.MarkerState.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor of marker-state.
+            </summary>
+            <param name="colonyId">Colony-id</param>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.MarkerState.PositionX">
+            <summary>
+            Gets or sets the x-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.MarkerState.PositionY">
+            <summary>
+            Gets or sets the y-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.MarkerState.Radius">
+            <summary>
+            Gets or sets the radius.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.MarkerState.Direction">
+            <summary>
+            Gets or sets the direction.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.IProducerPlugin">
+            <summary>
+            Interface for all producing plugins in antme.
+            </summary>
+            <autor>Tom Wendel (tom@antme.net)</autor>
+        </member>
+        <member name="M:AntMe.SharedComponents.Plugin.IProducerPlugin.CreateState(AntMe.SharedComponents.States.SimulationState@)">
+            <summary>
+            Sends the filled state from consumers to the producer to put in the <see cref="T:AntMe.SharedComponents.States.SimulationState"/>. Only called by GameLoop-Thread.
+            </summary>
+            <param name="state">filled state</param>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.SugarState">
+            <summary>
+            Holds information about sugar.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SugarState.m_amount">
+            <summary>
+            Amount of food.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SugarState.m_positionX">
+            <summary>
+            x-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SugarState.m_positionY">
+            <summary>
+            y-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SugarState.m_radius">
+            <summary>
+            Radius.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.SugarState.#ctor(System.Int32)">
+            <summary>
+            Constructor of sugar-state
+            </summary>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SugarState.Amount">
+            <summary>
+            Gets or sets the load of sugar.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SugarState.PositionX">
+            <summary>
+            Gets or sets the x-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SugarState.PositionY">
+            <summary>
+            Gets or sets the y-part of the position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SugarState.Radius">
+            <summary>
+            Gets or sets the radius.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.PreselectedAttribute">
+            <summary>
+            Attribute to mark a plugin as important that should be selected at the 
+            first start of AntMe. This attribute only takes effect, if there is no 
+            configuration-file from earlier starts.
+            </summary>
+            <author>Tom Wendel (tom@antme.net)</author>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.Block.Frame">
+            <summary>
+            Repräsentiert den Zustandsblock
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.SimulationState">
+            <summary>
+            Holds the information of one single simulation-step
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SimulationState.m_customFields">
+            <summary>
+            List of custom fields.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SimulationState.m_currentRound">
+            <summary>
+            Number of current round.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SimulationState.m_playgroundHeight">
+            <summary>
+            Height of playground.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SimulationState.m_playgroundWidth">
+            <summary>
+            Width of playground.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SimulationState.m_timeStamp">
+            <summary>
+            Time-stamp of this state.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.SimulationState.m_totalRounds">
+            <summary>
+            Total count of rounds.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.SimulationState.#ctor">
+            <summary>
+            Constructor to initialize the lists.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.SimulationState.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Constructor to initialize the lists and set the basic parameters.
+            </summary>
+            <param name="width">width of the playground</param>
+            <param name="height">height of the playground</param>
+            <param name="round">the current round</param>
+            <param name="rounds">the number of total rounds</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.SimulationState.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.DateTime)">
+            <summary>
+            Constructor to initialize the lists and set the basic parameters.
+            </summary>
+            <param name="width">width of the playground</param>
+            <param name="height">height of the playground</param>
+            <param name="round">the current round</param>
+            <param name="rounds">the number of total rounds</param>
+            <param name="time">the time-stamp of this simulation-state</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.BugStates">
+            <summary>
+            Gets a list of bugs.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.FruitStates">
+            <summary>
+            Gets a list of fruits.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.TeamStates">
+            <summary>
+            Gets a list of teams.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.SugarStates">
+            <summary>
+            Gets a list of sugar.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.CustomFields">
+            <summary>
+            Gets the list of custom fields.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.TimeStamp">
+            <summary>
+            Gets or sets the time-stamp of this simulation-state.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.TotalRounds">
+            <summary>
+            Gets or sets the number of total rounds.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.CurrentRound">
+            <summary>
+            Gets or sets the number of current round.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.PlaygroundWidth">
+            <summary>
+            Gets or sets the width of the playground.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.SimulationState.PlaygroundHeight">
+            <summary>
+            Gets or sets the height of the playground.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Resource">
+            <summary>
+              Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.ResourceManager">
+            <summary>
+              Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.Culture">
+            <summary>
+              Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+              Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.AntvideoReaderInvalidBlockType">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die AntVI-Stream delivered an invalid start block. Expected: FrameStart. Received: {0}. ähnelt.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.AntvideoReaderNoReadAccessException">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The input stream could not be read. ähnelt.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.AntvideoReaderNoStreamException">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The input stream has not been set. ähnelt.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.AntvideoSerializerInvalidBlockType">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die AntVI-Stream delivered an invalid element: {0}. ähnelt.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.AntvideoSerializerWrongHeader">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The stream does not contain the AntVi-format. ähnelt.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.Resource.AntvideoSerializerWrongProtocolVersion">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The stream contains an AntVI-version that could not be processed ({0}.{1}.{2}.{3}). ähnelt.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.Serializer">
+            <summary>
+            Class, to manage all serialize-tasks.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.Read(AntMe.SharedComponents.AntVideo.ISerializable@)">
+            <summary>
+            Reads the next block out of stream.
+            </summary>
+            <param name="block">the found block</param>
+            <returns>type of found block</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.WriteHello">
+            <summary>
+            Writes the hello-header to stream.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.ReadHello">
+            <summary>
+            Reads hello-header out of stream.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.Write(AntMe.SharedComponents.AntVideo.BlockType,AntMe.SharedComponents.AntVideo.ISerializable)">
+            <summary>
+            Writes a given block to stream.
+            </summary>
+            <param name="blocktype">type of given block</param>
+            <param name="block">block, to write</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.Write(AntMe.SharedComponents.AntVideo.BlockType)">
+            <summary>
+            Writes a given block to stream.
+            </summary>
+            <param name="blocktype">type of block</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.Peek">
+            <summary>
+            Reads the following byte without affect the streamposition.
+            </summary>
+            <returns>next byte</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.Close">
+            <summary>
+            Close stream.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.SendUshort(System.UInt16)">
+            <summary>
+            Sendet einen ushort über den Stream
+            </summary>
+            <param name="item">ushort</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.SendShort(System.Int16)">
+            <summary>
+            Sends a short
+            </summary>
+            <param name="item">short</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.SendSByte(System.SByte)">
+            <summary>
+            Sendet einen sbyte über den angegebenen stream
+            </summary>
+            <param name="item">sbyte</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.SendInt(System.Int32)">
+            <summary>
+            Sendet einen integer über den Stream
+            </summary>
+            <param name="item">integer</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.SendString(System.String)">
+            <summary>
+            Sendet einen string über den Stream
+            </summary>
+            <param name="item">string</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.ReadUShort">
+            <summary>
+            Liest den nächsten ushort aus dem angegebenen Stream
+            </summary>
+            <returns>ausgelesener ushort</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.ReadSByte">
+            <summary>
+            Liest das nächste sbyte aus dem angegebenen Stream
+            </summary>
+            <returns>ausgelesener sbyte</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.ReadInt">
+            <summary>
+            Liest einen Integer aus dem Stream
+            </summary>
+            <returns>gelesener int</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.ReadString">
+            <summary>
+            Liest einen String aus dem stream
+            </summary>
+            <returns>string</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Serializer.ReadDateTime">
+            <summary>
+            Liest einen DateTime aus dem Stream aus
+            </summary>
+            <returns>DateTime</returns>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.ColonyState">
+            <summary>
+            Holds the information of one colony in a simulation-state.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_guid">
+            <summary>
+            <c>Guid</c> of that colony.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_beatenAnts">
+            <summary>
+            Count of beaten ants.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_collectedFood">
+            <summary>
+            Count of collected food.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_collectedFruits">
+            <summary>
+            Count of collected fruits.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_eatenAnts">
+            <summary>
+            Count of eaten ants.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_colonyName">
+            <summary>
+            Colony-name.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_killedBugs">
+            <summary>
+            Count of killed bugs.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_killedEnemies">
+            <summary>
+            Count of killed enemies.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_playerName">
+            <summary>
+            Name of player.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_points">
+            <summary>
+            Total count of points.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.ColonyState.m_starvedAnts">
+            <summary>
+            count of starved ants.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.ColonyState.#ctor(System.Int32)">
+            <summary>
+            Constructor of colony-state
+            </summary>
+            <param name="id">id</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.ColonyState.#ctor(System.Int32,System.Guid,System.String,System.String)">
+            <summary>
+            Constructor of colony-state
+            </summary>
+            <param name="id">id of this colony</param>
+            <param name="guid"><c>guid</c></param>
+            <param name="colonyName">Name of this colony</param>
+            <param name="playerName">Name of player</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.AntStates">
+            <summary>
+            Gets a list of ants.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.AnthillStates">
+            <summary>
+            Gets a list of anthills.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.MarkerStates">
+            <summary>
+            Gets a list of markers.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.CasteStates">
+            <summary>
+            gets a list of castes.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.Guid">
+            <summary>
+            Gets or sets the guid of the colony.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.ColonyName">
+            <summary>
+            Gets or sets the name of this colony.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.PlayerName">
+            <summary>
+            Gets or sets the name of the player.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.StarvedAnts">
+            <summary>
+            Gets or sets the count of starved ants.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.EatenAnts">
+            <summary>
+            Gets or sets the count of eaten ants.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.BeatenAnts">
+            <summary>
+            Gets or sets the count of beaten ants.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.KilledBugs">
+            <summary>
+            Gets or sets the count of killed bugs.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.KilledEnemies">
+            <summary>
+            Gets or sets the count of killed enemies.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.CollectedFood">
+            <summary>
+            Gets or sets the amount of collected food.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.CollectedFruits">
+            <summary>
+            Gets or sets the amount of collected fruits.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.ColonyState.Points">
+            <summary>
+            Gets or sets the total points.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.Block.Colony.Reset">
+            <summary>
+            Setzt die Updatedaten auf erwartete Werte
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.AntVideoWriter">
+            <summary>
+            Class, to stream some simulation state as ant-video-stream.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.AntVideoWriter.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new instance of ant-video-writer.
+            </summary>
+            <param name="outputStream">output-stream</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.AntVideoWriter.Write(AntMe.SharedComponents.States.SimulationState)">
+            <summary>
+            Writes a new state to the stream.
+            </summary>
+            <param name="state">New state</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.AntVideoWriter.Close">
+            <summary>
+            Close the writer.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntVideo.AntVideoReader">
+            <summary>
+            Class, to read and decode ant-video-Streams.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.AntVideoReader.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new instance of reader.
+            </summary>
+            <param name="inputStream">input-stream</param>
+        </member>
+        <member name="M:AntMe.SharedComponents.AntVideo.AntVideoReader.Read">
+            <summary>
+            Reads a new simulation-state out of stream.
+            </summary>
+            <returns>New simulation-state or null, if stream is over</returns>
+        </member>
+        <member name="P:AntMe.SharedComponents.AntVideo.AntVideoReader.CurrentFrame">
+            <summary>
+            Gives the current frame-position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.AntVideo.AntVideoReader.TotalFrames">
+            <summary>
+            Gives the number of total frames.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Tools.NameHelper">
+            <summary>
+            A static helper class that returns female and male first names.
+            </summary>
+            <author>Wolfgang Gallo (wolfgang@antme.net)</author>
+        </member>
+        <member name="F:AntMe.SharedComponents.Tools.NameHelper.FemaleNames">
+            <summary>
+            An array of female first names.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Tools.NameHelper.MaleNames">
+            <summary>
+            An array of male first names.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.NameHelper.GetFemaleName(System.Int32)">
+            <summary>
+            Returns a female first name for a given hash value.
+            </summary>
+            <remarks>
+            The same hash value will always return the same name within an application session.
+            </remarks>
+            <param name="hashValue">A value to use for hashing, for example an id.</param>
+            <returns>A female first name.</returns>
+        </member>
+        <member name="M:AntMe.SharedComponents.Tools.NameHelper.GetMaleName(System.Int32)">
+            <summary>
+            Returns a male first name for a given hash value.
+            </summary>
+            <remarks>
+            The same hash value will always return the same name within an application session.
+            </remarks>
+            <param name="hashValue">A value to use for hashing, for example an id.</param>
+            <returns>A male first name.</returns>
+        </member>
+        <member name="T:AntMe.SharedComponents.AntMeException">
+            <summary>
+            Exception for special AntMe-Exceptions.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.AntState">
+            <summary>
+            Holds information about an ant.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_casteId">
+            <summary>
+            ID of caste.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_direction">
+            <summary>
+            Direction.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_load">
+            <summary>
+            Load.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_targetType">
+            <summary>
+            Target.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_loadType">
+            <summary>
+            Type of load.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_targetPositionX">
+            <summary>
+            x-part of target position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_targetPositionY">
+            <summary>
+            y-part of target position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_positionX">
+            <summary>
+            x-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_positionY">
+            <summary>
+            y-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AntState.m_vitality">
+            <summary>
+            Vitality.
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.AntState.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor of ant-state
+            </summary>
+            <param name="colonyId">Colony-id</param>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.CasteId">
+            <summary>
+            Gets or sets the id of the caste.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.Direction">
+            <summary>
+            Gets or sets the direction.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.Load">
+            <summary>
+            Gets or sets the load.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.LoadType">
+            <summary>
+            Gets or sets the type of load.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.PositionX">
+            <summary>
+            Gets or sets the x-part of position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.TargetType">
+            <summary>
+            Gets or sets the kind of target.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.TargetPositionX">
+            <summary>
+            Gets or sets the x-part of the target position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.TargetPositionY">
+            <summary>
+            Gets or sets the y-part of the target position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.PositionY">
+            <summary>
+            Gets or sets the y-part of position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AntState.Vitality">
+            <summary>
+            Gets or sets the vitality.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.TargetType">
+            <summary>
+            List of possible targets for an ant.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.None">
+            <summary>
+            There is no target.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.Ant">
+            <summary>
+            Target is an ant.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.Anthill">
+            <summary>
+            Target is an anthill.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.Bug">
+            <summary>
+            Target are bugs.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.Fruit">
+            <summary>
+            Target is fruit.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.Marker">
+            <summary>
+            Target is a marker.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.TargetType.Sugar">
+            <summary>
+            Target is sugar.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.States.AnthillState">
+            <summary>
+            Holds information about an anthill.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AnthillState.m_positionX">
+            <summary>
+            x-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AnthillState.m_positionY">
+            <summary>
+            y-part of position.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.States.AnthillState.m_radius">
+            <summary>
+            radius
+            </summary>
+        </member>
+        <member name="M:AntMe.SharedComponents.States.AnthillState.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor of anthill-state
+            </summary>
+            <param name="colonyId">Colony-id</param>
+            <param name="id">id</param>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AnthillState.PositionX">
+            <summary>
+            Gets or sets the x-part of position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AnthillState.PositionY">
+            <summary>
+            Gets or sets the y-part of position.
+            </summary>
+        </member>
+        <member name="P:AntMe.SharedComponents.States.AnthillState.Radius">
+            <summary>
+            Gets or sets the radius.
+            </summary>
+        </member>
+        <member name="T:AntMe.SharedComponents.Plugin.ReadCustomStateAttribute">
+            <summary>
+            Attribute, to signal, that the marked plugin reads the custom field.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.ReadCustomStateAttribute.Name">
+            <summary>
+            The name of the custom field.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.ReadCustomStateAttribute.Type">
+            <summary>
+            The full name of the used type.
+            </summary>
+        </member>
+        <member name="F:AntMe.SharedComponents.Plugin.ReadCustomStateAttribute.Description">
+            <summary>
+            Optional description of usage.
+            </summary>
+        </member>
+    </members>
+</doc>

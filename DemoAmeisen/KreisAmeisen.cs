@@ -51,17 +51,7 @@ namespace AntMe.Spieler.WolfgangGallo
 		/// </summary>
 		public KreisAmeise()
 		{
-            // TODO: reparieren - funktioniert so nämlich nicht mehr!
-			if (Kaste == "Wächter")
-			{
-				umkreisRadius = Zufall.Zahl(10, Sichtweite * 2);
-				rückwärtsFaktor = Zufall.Zahl(2) == 0 ? 1 : -1;
-
-				// Der Kreis um den Zuckerhaufen wird durch ein n-Eck angenähert.
-				int n = umkreisRadius / 2;
-				seitenLänge = (int)(2 * umkreisRadius * Math.Sin(Math.PI / n));
-				innenWinkel = 180 * (n - 2) / n;
-			}
+            
 		}
 
 		/// <summary>
@@ -75,6 +65,15 @@ namespace AntMe.Spieler.WolfgangGallo
 			if (erzeugeWächter)
 			{
 				erzeugeWächter = false;
+
+                umkreisRadius = Zufall.Zahl(10, Sichtweite * 2);
+                rückwärtsFaktor = Zufall.Zahl(2) == 0 ? 1 : -1;
+
+                // Der Kreis um den Zuckerhaufen wird durch ein n-Eck angenähert.
+                int n = umkreisRadius / 2;
+                seitenLänge = (int)(2 * umkreisRadius * Math.Sin(Math.PI / n));
+                innenWinkel = 180 * (n - 2) / n;
+
 				return "Wächter";
 			}
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.DirectX;
+﻿
 
 namespace AntMe.Plugin.Mdx {
+    using SlimDX;
+
     /// <summary>
     /// Pickray for selection
     /// </summary>

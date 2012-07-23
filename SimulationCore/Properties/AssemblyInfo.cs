@@ -15,7 +15,6 @@ using System.Security;
 [assembly: AssemblyCopyright("Copyright © 2006 AntMe! Ltd.")]
 [assembly: AssemblyTrademark("AntMe!")]
 [assembly : AssemblyCulture("")]
-[assembly : AllowPartiallyTrustedCallers]
 //[assembly:
 //    InternalsVisibleTo(
 //        "AntMe.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001000f5bb66b6a593b52d3188920c2ae2f9f539c2f2108e84ef10551fb28fba1db6c7faf83a93a29dde43588bed0832bcb1e1371f3830525b4a862dd4d6d59afc521509736af1e63c276743c4b6e74193a1fe47f03389ae0d3f6b16654b887ccd227b959f84d378ec4b94d399ec4cdfdfa56a8cb46835770e1ab69a77f1aadb2e9b3"
@@ -41,5 +40,13 @@ using System.Security;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly : AssemblyVersion("1.6.0.*")]
-[assembly : AssemblyFileVersion("1.6.0.0")]
+
+#if EnableRoxxVersion1
+
+[assembly: AssemblyVersion("1.6.0.16789")] // This is the Version of the Online Version!
+#else
+[assembly: AssemblyVersion("1.6.1.5942")] // This is the Version of the Online Version!
+#endif
+[assembly : AssemblyFileVersion("1.6.1.0")]
+
+[assembly: AllowPartiallyTrustedCallers()]

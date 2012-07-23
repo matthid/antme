@@ -2,9 +2,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-using Microsoft.DirectX;
+namespace AntMe.Plugin.Mdx
+{
+    using SlimDX;
 
-namespace AntMe.Plugin.Mdx {
     /// <summary>
     /// Represents a camera
     /// </summary>
@@ -199,9 +200,9 @@ namespace AntMe.Plugin.Mdx {
                     // tranform ray to view
                     Matrix viewMatrix = ViewMatrix;
                     viewMatrix.Invert();
-                    outputRay.Origin.TransformCoordinate(viewMatrix);
-                    outputRay.Direction.TransformNormal(viewMatrix);
-                    outputRay.Direction.Normalize();
+                    outputRay.Origin = Vector3.TransformCoordinate(outputRay.Origin, viewMatrix);
+                    outputRay.Direction = Vector3.TransformNormal(outputRay.Direction, viewMatrix);
+                    outputRay.Direction = Vector3.Normalize( outputRay.Direction);
 
                     return outputRay;
                 }

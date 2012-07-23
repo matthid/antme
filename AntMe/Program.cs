@@ -6,8 +6,11 @@ using System.Windows.Forms;
 using AntMe.Gui.Properties;
 
 namespace AntMe.Gui {
+    using System.Security.Permissions;
+
     internal sealed class Program {
         [STAThread]
+        [SecurityPermission(SecurityAction.LinkDemand, Unrestricted = true)]
         public static void Main(string[] parameter) {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

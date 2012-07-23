@@ -1,8 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace AntMe.Simulation {
+    using System;
+
     /// <summary>
     /// Host-Class for Ai-Analysis to host the analyze-core inside application-domains.
     /// </summary>
@@ -112,6 +113,9 @@ namespace AntMe.Simulation {
                         // TODO: Prüfen, wie wir damit umgehen
                         break;
                     case "System":
+                        // TODO: Prüfen, wie wir damit umgehen
+                        break;
+                    case "System.Core":
                         // TODO: Prüfen, wie wir damit umgehen
                         break;
                     case "AntMe.Simulation":
@@ -419,7 +423,15 @@ namespace AntMe.Simulation {
                     #region Erkennung älterer KI-Versionen
 
                     // Ältere Versionen
-                else if (type.BaseType.Name == "AntMe.Ameise") {
+
+                    // NOTE: Bug fix for public classes which do not contain ants (then this can be null!)
+#if OnlineVersion
+                else if (type.BaseType.Name == "AntMe.Ameise")
+#else
+
+                else if (type.BaseType != null && type.BaseType.Name == "AntMe.Ameise")
+#endif
+                {
                     // Leerer Spieler-Rumpf
                     int playerDefinitions = 0;
 

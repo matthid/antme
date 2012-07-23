@@ -77,7 +77,13 @@ namespace AntMe.Simulation {
         /// <summary>
         /// Der X-Wert des Elements.
         /// </summary>
-        internal int X {
+#if COORDINATEACCESS
+        public
+#else
+        internal 
+#endif
+        int X
+        {
             get { return x; }
             set { x = value; }
         }
@@ -85,7 +91,13 @@ namespace AntMe.Simulation {
         /// <summary>
         /// Der Y-Wert des Elements.
         /// </summary>
-        internal int Y {
+#if COORDINATEACCESS
+        public
+#else
+        internal 
+#endif
+        int Y
+        {
             get { return y; }
             set { y = value; }
         }
@@ -95,7 +107,13 @@ namespace AntMe.Simulation {
         /// die Bestimmung von Entfernungen) auf Punkten und Kreisen basiert, wird
         /// auch der Radius eines Objektes in der IKoordinate Struktur gespeichert.
         /// </summary>
-        internal int Radius {
+#if COORDINATEACCESS
+        public
+#else
+        internal 
+#endif
+        int Radius
+        {
             get { return radius; }
             set { radius = Math.Abs(value); }
         }
@@ -106,7 +124,13 @@ namespace AntMe.Simulation {
         /// haben benötigen die Richtung, aber die IKoordinate-Struktur ist der
         /// beste Platz um auch die Richtung eines Objektes zu speichern.
         /// </summary>
-        internal int Richtung {
+#if COORDINATEACCESS
+        public
+#else
+        internal 
+#endif
+        int Richtung
+        {
             get { return richtung; }
             set {
                 richtung = value;

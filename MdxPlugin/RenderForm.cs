@@ -5,13 +5,20 @@ using System.Windows.Forms;
 
 using AntMe.SharedComponents.States;
 
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-
 using Resource=AntMe.Plugin.Mdx.Resource;
+
 using System.Diagnostics;
 
 namespace AntMe.Plugin.Mdx {
+    using SlimDX;
+    using SlimDX.Direct3D9;
+    using SlimDX.DirectInput;
+
+    using Capabilities = SlimDX.Direct3D9.Capabilities;
+    using Device = SlimDX.Direct3D9.Device;
+    using DeviceType = SlimDX.Direct3D9.DeviceType;
+    using FillMode = SlimDX.Direct3D9.FillMode;
+
     internal partial class RenderForm : Form {
         #region Constants
 
@@ -22,7 +29,7 @@ namespace AntMe.Plugin.Mdx {
 
         private readonly PresentParameters presentParameters;
         private Device renderDevice;
-        private Caps deviceCaps;
+        private Capabilities deviceCaps;
 
         private readonly string[] names;
         private readonly Random random = new Random();
@@ -35,6 +42,7 @@ namespace AntMe.Plugin.Mdx {
         Stopwatch watch = new Stopwatch();
 
         private SimulationState simulationState;
+        SlimDX.Direct3D9.Direct3D Manager = new Direct3D();
 
         public RenderForm() {
             InitializeComponent();
@@ -55,7 +63,7 @@ namespace AntMe.Plugin.Mdx {
             presentParameters.BackBufferFormat = Manager.Adapters[0].CurrentDisplayMode.Format;
             presentParameters.BackBufferCount = 1;
             presentParameters.EnableAutoDepthStencil = true;
-            presentParameters.AutoDepthStencilFormat = DepthFormat.D16;
+            presentParameters.AutoDepthStencilFormat = Format.D16; 
 
             // If possible, use bether depth-buffer
             if (
@@ -65,20 +73,20 @@ namespace AntMe.Plugin.Mdx {
                     DeviceType.Hardware,
                     Manager.Adapters[0].CurrentDisplayMode.Format,
                     Manager.Adapters[0].CurrentDisplayMode.Format,
-                    DepthFormat.D24X8)) {
-                presentParameters.AutoDepthStencilFormat = DepthFormat.D24X8;
+                    Format.D24X8)) {
+                presentParameters.AutoDepthStencilFormat = Format.D24X8;
             }
 
             // Check for multisampling
             if (
-                Manager.CheckDeviceMultiSampleType
+                Manager.CheckDeviceMultisampleType
                     (
                     0,
                     DeviceType.Hardware,
                     Manager.Adapters[0].CurrentDisplayMode.Format,
                     true,
-                    MultiSampleType.TwoSamples)) {
-                presentParameters.MultiSample = MultiSampleType.TwoSamples;
+                    MultisampleType.TwoSamples)) {
+                presentParameters.Multisample = MultisampleType.TwoSamples;
             }
         }
 
@@ -92,29 +100,30 @@ namespace AntMe.Plugin.Mdx {
 
             // Device erzeugen
             CreateFlags flags;
-            if (deviceCaps.DeviceCaps.SupportsHardwareTransformAndLight) {
+            if (deviceCaps.DeviceCaps.HasFlag(DeviceCaps.HWTransformAndLight)) {
                 flags = CreateFlags.HardwareVertexProcessing;
             }
             else {
                 flags = CreateFlags.SoftwareVertexProcessing;
             }
-            if (deviceCaps.DeviceCaps.SupportsPureDevice) {
+            if (deviceCaps.DeviceCaps.HasFlag(DeviceCaps.PureDevice)) {
                 flags |= CreateFlags.PureDevice;
             }
 
             // Versuche ein DirectX-Device zu erzeugen. Falls dies fehlschlägt wird alternativ ein
             // Referenz-Device erzeugt.
             try {
-                renderDevice = new Device(0, DeviceType.Hardware, this, flags, presentParameters);
+                renderDevice = new Device(Manager, 0, DeviceType.Hardware, this.Handle, flags, presentParameters);
             }
             catch (Exception) {
                 renderDevice =
                     new Device
-                        (0, DeviceType.Reference, this, CreateFlags.SoftwareVertexProcessing, presentParameters);
+                        (Manager, 0, DeviceType.Reference, this.Handle, CreateFlags.SoftwareVertexProcessing, presentParameters);
             }
 
             // Events abgreifen
-            renderDevice.DeviceReset += device_reset;
+            // BUG: POSSIBLE BUG
+            ////renderDevice.DeviceReset += device_reset;
 
             // Kamera erstellen
             camera = new Camera(this);
@@ -141,7 +150,8 @@ namespace AntMe.Plugin.Mdx {
 
             // free Device
             if (renderDevice != null) {
-                renderDevice.DeviceReset -= device_reset;
+                // BUG: POSSIBLE BUG
+                //renderDevice.DeviceReset -= device_reset;
                 renderDevice.Dispose();
                 renderDevice = null;
             }
@@ -170,7 +180,7 @@ namespace AntMe.Plugin.Mdx {
 
                         // Update Camera
                         camera.Update(currentState.PlaygroundWidth, currentState.PlaygroundHeight);
-                        renderDevice.Transform.View = camera.ViewMatrix;
+                        renderDevice.SetTransform(TransformState.View, camera.ViewMatrix);
                         Pickray pickray = camera.Pickray;
                         Point mousePosition = camera.MousePosition;
 
@@ -353,38 +363,38 @@ namespace AntMe.Plugin.Mdx {
         #region Device-Events
 
         private void device_reset(object sender, EventArgs e) {
-            renderDevice.RenderState.ZBufferEnable = true;
-            renderDevice.RenderState.CullMode = Cull.CounterClockwise;
-            renderDevice.RenderState.Lighting = true;
-            renderDevice.RenderState.FillMode = FillMode.Solid;
+            renderDevice.SetRenderState(RenderState.ZWriteEnable, true);
+            renderDevice.SetRenderState(RenderState.CullMode, Cull.Counterclockwise);
+            renderDevice.SetRenderState(RenderState.Lighting, true);
+            renderDevice.SetRenderState(RenderState.FillMode, FillMode.Solid);
 
             // Matrizen zur Objekttransformation festlegen
-            renderDevice.Transform.World = Matrix.Identity;
-            renderDevice.Transform.View = camera.ViewMatrix;
-            renderDevice.Transform.Projection =
+            renderDevice.SetTransform(TransformState.World, Matrix.Identity);
+            renderDevice.SetTransform(TransformState.View, camera.ViewMatrix);
+            renderDevice.SetTransform(TransformState.Projection,
                 projectionMatrix =
                 Matrix.PerspectiveFovLH
                     (
                     (float) Math.PI/4,
                     ClientSize.Width/(float) ClientSize.Height,
                     VIEWRANGE_MIN,
-                    VIEWRANGE_MAX);
+                    VIEWRANGE_MAX));
 
             // Licht einschalten
-            renderDevice.Lights[0].Type = LightType.Directional;
-            renderDevice.Lights[0].Ambient = Color.FromArgb(60, 60, 60);
-            renderDevice.Lights[0].Diffuse = Color.Black;
-            renderDevice.Lights[0].Specular = Color.FromArgb(100, 100, 100);
-            renderDevice.Lights[0].Direction = Vector3.Normalize(new Vector3(-1.0f, -1.0f, 1.0f));
-            renderDevice.Lights[0].Update();
-            renderDevice.Lights[0].Enabled = true;
+            var light = new Light(); 
+            light.Type = LightType.Directional;
+            light.Ambient = Color.FromArgb(60, 60, 60);
+            light.Diffuse = Color.Black;
+            light.Specular = Color.FromArgb(100, 100, 100);
+            light.Direction = Vector3.Normalize(new Vector3(-1.0f, -1.0f, 1.0f));
+            renderDevice.SetLight(0, light);
 
-            renderDevice.RenderState.NormalizeNormals = true;
-            renderDevice.RenderState.AmbientMaterialSource = ColorSource.Material;
-            renderDevice.RenderState.DiffuseMaterialSource = ColorSource.Material;
-            renderDevice.RenderState.SpecularMaterialSource = ColorSource.Material;
-            renderDevice.RenderState.SpecularEnable = true;
-            renderDevice.RenderState.ShadeMode = ShadeMode.Gouraud;
+            renderDevice.SetRenderState(RenderState.NormalizeNormals, true);
+            renderDevice.SetRenderState(RenderState.AmbientMaterialSource, ColorSource.Material);
+            renderDevice.SetRenderState(RenderState.DiffuseMaterialSource, ColorSource.Material);
+            renderDevice.SetRenderState(RenderState.SpecularMaterialSource, ColorSource.Material);
+            renderDevice.SetRenderState(RenderState.SpecularEnable, true);
+            renderDevice.SetRenderState(RenderState.ShadeMode, ShadeMode.Gouraud);
 
             // Models im Manager neu laden
             if (modelManager != null) {
