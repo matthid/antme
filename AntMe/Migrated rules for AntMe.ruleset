@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Migrated rules for AntMe.ruleset" Description="Dieser Regelsatz wurde aus der CodeAnalysisRules-Eigenschaft für die Debug (x86)-Konfiguration in Projekt &quot;C:\Dokumente und Einstellungen\Wolfgang\Desktop\Profi\AntMe\AntMe.csproj&quot; erstellt." ToolsVersion="10.0">
+  <RuleHintPaths>
+    <Path>\rules</Path>
+  </RuleHintPaths>
+</RuleSet>
